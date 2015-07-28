@@ -16,7 +16,7 @@ in_edges, out_edges, has_vertex, has_edge, is_directed,
 nv, ne, add_edge!, rem_edge!, add_vertex!, add_vertices!,
 indegree, outdegree, degree, degree_histogram, density, Δ, δ,
 Δout, Δin, δout, δin, neighbors, in_neighbors, out_neighbors,
-common_neighbors,
+common_neighbors, all_neighbors, has_self_loop,
 
 # distance
 eccentricity, diameter, periphery, radius, center,
@@ -40,6 +40,8 @@ DepthFirst, is_cyclic, topological_sort_by_dfs, dfs_tree,
 
 # connectivity
 connected_components, strongly_connected_components, weakly_connected_components,
+is_connected, is_strongly_connected, is_weakly_connected, period,
+condensation, attracting_components,
 
 # maximum_adjacency_visit
 MaximumAdjacency, AbstractMASVisitor, mincut, maximum_adjacency_visit,
@@ -72,24 +74,24 @@ adjacency_matrix, laplacian_matrix, adjacency_spectrum, laplacian_spectrum,
 a_star,
 
 # persistence
-readgraph, read_graphml,
+readgraph, readgraphml, readgml,
 
 # randgraphs
-erdos_renyi, watts_strogatz
+erdos_renyi, watts_strogatz, random_regular_graph, random_regular_digraph
 
 include("core.jl")
     include("digraph.jl")
     include("graph.jl")
-        include("astar.jl")
-        include("graphvisit.jl")
-            include("bfs.jl")
-            include("dfs.jl")
-            include("maxadjvisit.jl")
+        include("traversals/graphvisit.jl")
+            include("traversals/bfs.jl")
+            include("traversals/dfs.jl")
+            include("traversals/maxadjvisit.jl")
         include("connectivity.jl")
         include("distance.jl")
-        include("bellman-ford.jl")
-        include("dijkstra.jl")
-        include("floyd-warshall.jl")
+        include("shortestpaths/astar.jl")
+        include("shortestpaths/bellman-ford.jl")
+        include("shortestpaths/dijkstra.jl")
+        include("shortestpaths/floyd-warshall.jl")
         include("linalg.jl")
         include("operators.jl")
         include("persistence.jl")

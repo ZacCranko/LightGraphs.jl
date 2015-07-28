@@ -1,4 +1,3 @@
-
 (f,fio) = mktemp()
 @test write(p1, f) == (46, 69)
 @test write(p1, f; compress=false) == (46, 69)
@@ -18,7 +17,7 @@ _HAVE_LIGHTXML = try
 if _HAVE_LIGHTXML
 #Try reading in a GraphML file from the Rome Graph collection
 #http://www.graphdrawing.org/data/
-let Gs = read_graphml("testdata/grafo1853.13.graphml")
+let Gs = readgraphml(joinpath(testdir, "testdata/grafo1853.13.graphml"))
     @test length(Gs) == 1
     @test Gs[1][1] == "G" #Name of graph
     G = Gs[1][2]
@@ -27,3 +26,17 @@ let Gs = read_graphml("testdata/grafo1853.13.graphml")
 end
 end # _HAVE_LIGHTXML
 
+_HAVE_PARSERCOMBINATOR = try
+        using ParserCombinator
+        using ParserCombinator.Parsers.GML
+        true
+    catch
+        false
+    end
+
+if _HAVE_PARSERCOMBINATOR
+    let g = readgml(joinpath(testdir,"testdata/graph-10-28.gml"))
+        @test nv(g) == 10
+        @test ne(g) == 28
+    end
+end

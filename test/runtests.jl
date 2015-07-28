@@ -15,6 +15,11 @@ h3 = Graph()
 h4 = DiGraph(7)
 h5 = DiGraph()
 
+# self loops
+s2 = DiGraph(3)
+add_edge!(s2,1,2); add_edge!(s2,2,3); add_edge!(s2,3,3)
+s1 = Graph(s2)
+
 r1 = Graph(10,20)
 r2 = DiGraph(5,10)
 
@@ -22,7 +27,7 @@ e0 = Edge(2, 3)
 e1 = Edge(1, 2)
 re1 = Edge(2, 1)
 
-testdir = joinpath(Pkg.dir("LightGraphs"),"test")
+testdir = dirname(@__FILE__)
 
 p1 = readgraph(joinpath(testdir,"testdata","tutte.jgz"))
 p2 = readgraph(joinpath(testdir,"testdata","pathdigraph.jgz"))
@@ -40,18 +45,19 @@ tests = [
     "persistence",
     "core",
     "smallgraphs",
-    "astar",
-    "bellman-ford",
-    "dijkstra",
+    "shortestpaths/astar",
+    "shortestpaths/bellman-ford",
+    "shortestpaths/dijkstra",
+    "shortestpaths/floyd-warshall",
     "distance",
-    "floyd-warshall",
     "linalg",
     "operators",
     "randgraphs",
-    "bfs",
-    "dfs",
+    "traversals/bfs",
+    "traversals/dfs",
+    "traversals/maxadjvisit",
+    "traversals/graphvisit",
     "connectivity",
-    "maxadjvisit",
     "centrality/betweenness",
     "centrality/closeness",
     "centrality/degree",

@@ -2,12 +2,13 @@
 Graphs may be written to I/O streams and files using the `write` function:
 
 `write(io, g)`  
-Writes a graph in a proprietary format (see [internals]("internals")) to the IO stream designated by `io`.
+Writes a graph `g` in a proprietary format to the IO stream designated by `io`.
 
 `write(g, fn[, compress=true])`  
 Writes a graph to a file `fn`, with default `GZip` compression.
 
-Both `write` functions will return tuples containing the number of vertices and number of edges written.
+Both `write` functions will return tuples containing the number of vertices and
+number of edges written.
 
 ### Reading a Graph From a File
 Graphs stored using the `write` functions above may be loaded using `readgraph`:
@@ -15,8 +16,13 @@ Graphs stored using the `write` functions above may be loaded using `readgraph`:
 `readgraph(fn)`  
 Returns a graph loaded from file `fn`.
 
-`read_graphml(fn)`  
-Returns a graph from file `fn` stored in [GraphML](http://en.wikipedia.org/wiki/GraphML) format.
+`readgraphml(fn)`  
+Returns a graph from file `fn` stored in [GraphML](http://en.wikipedia.org/wiki/GraphML)
+format.
+
+`readgml(fn)`  
+Returns a graph from file `fn` stored in [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language)
+format.
 
 
 ###Examples
@@ -24,5 +30,6 @@ Returns a graph from file `fn` stored in [GraphML](http://en.wikipedia.org/wiki/
 julia> write(STDOUT, g)
 julia> write(g, "mygraph.jgz")
 julia> g = readgraph("mygraph.jgz")
-julia> g = read_graphml("mygraph.xml")
+julia> g = readgraphml("mygraph.xml")
+julia> g = readgml("mygraph.gml")
 ```

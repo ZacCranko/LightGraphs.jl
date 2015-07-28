@@ -14,6 +14,18 @@ end
 
 typealias Edge Pair{Int,Int}
 
+src(e::Edge) = e.first
+dst(e::Edge) = e.second
+
+@deprecate rev(e::Edge) reverse(e)
+
+==(e1::Edge, e2::Edge) = (e1.first == e2.first && e1.second == e2.second)
+
+function show(io::IO, e::Edge)
+    print(io, "edge $(e.first) - $(e.second)")
+end
+
+
 type Graph
     vertices::UnitRange{Int}
     edges::Set{Edge}
@@ -30,16 +42,6 @@ end
 
 typealias SimpleGraph Union(Graph, DiGraph)
 
-src(e::Edge) = e.first
-dst(e::Edge) = e.second
-
-@deprecate rev(e::Edge) reverse(e)
-
-==(e1::Edge, e2::Edge) = (e1.first == e2.first && e1.second == e2.second)
-
-function show(io::IO, e::Edge)
-    print(io, "edge $(e.first) - $(e.second)")
-end
 
 vertices(g::SimpleGraph) = g.vertices
 edges(g::SimpleGraph) = g.edges
@@ -52,8 +54,7 @@ badj(g::SimpleGraph, v::Int) = g.badjlist[v]
 function issubset{T<:SimpleGraph}(g::T, h::T)
     (gmin, gmax) = extrema(vertices(g))
     (hmin, hmax) = extrema(vertices(h))
-    return (hmin <= gmin <= gmax <= hmax) &&
-    issubset(edges(g), edges(h))
+    return (hmin <= gmin <= gmax <= hmax) && issubset(edges(g), edges(h))
 end
 
 function add_vertex!(g::SimpleGraph)
@@ -86,8 +87,6 @@ add_edge!(g::SimpleGraph, src::Int, dst::Int) = add_edge!(g, Edge(src,dst))
 
 rem_edge!(g::SimpleGraph, src::Int, dst::Int) = rem_edge!(g, Edge(src,dst))
 
-is_directed(g::SimpleGraph) = (typeof(g) == Graph? false : true)
-
 indegree(g::SimpleGraph, v::Int) = length(badj(g,v))
 outdegree(g::SimpleGraph, v::Int) = length(fadj(g,v))
 
@@ -95,8 +94,6 @@ outdegree(g::SimpleGraph, v::Int) = length(fadj(g,v))
 indegree(g::SimpleGraph, v::AbstractArray{Int,1} = vertices(g)) = [indegree(g,x) for x in v]
 outdegree(g::SimpleGraph, v::AbstractArray{Int,1} = vertices(g)) = [outdegree(g,x) for x in v]
 degree(g::SimpleGraph, v::AbstractArray{Int,1} = vertices(g)) = [degree(g,x) for x in v]
-#Δ(g::SimpleGraph) = maximum(degree(g))
-#δ(g::SimpleGraph) = minimum(degree(g))
 Δout(g) = noallocextreme(outdegree,(>), typemin(Int), g)
 δout(g) = noallocextreme(outdegree,(<), typemax(Int), g)
 δin(g)  = noallocextreme(indegree,(<), typemax(Int), g)
@@ -118,11 +115,15 @@ end
 
 degree_histogram(g::SimpleGraph) = (hist(degree(g), 0:nv(g)-1)[2])
 
-neighbors(g::SimpleGraph, v::Int) = fadj(g,v)
+
 in_neighbors(g::SimpleGraph, v::Int) = badj(g,v)
 out_neighbors(g::SimpleGraph, v::Int) = fadj(g,v)
+
+neighbors(g::SimpleGraph, v::Int) = out_neighbors(g, v)
 common_neighbors(g::SimpleGraph, u::Int, v::Int) = intersect(neighbors(g,u), neighbors(g,v))
 
 function copy{T<:SimpleGraph}(g::T)
     return T(g.vertices,copy(g.edges),deepcopy(g.fadjlist),deepcopy(g.badjlist))
 end
+
+has_self_loop(g::SimpleGraph) = any(v->has_edge(g, v, v), vertices(g))
